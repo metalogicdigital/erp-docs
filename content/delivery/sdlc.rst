@@ -13,7 +13,7 @@ The work hierarchy
    :caption: Planning hierarchy and development traceability
 
    digraph sdlc {
-      rankdir=LR;
+      rankdir=TB; nodesep=0.3; ranksep=0.4;
       node [shape=box, style="rounded,filled", fillcolor="#F8F8F8", color="#D5D5D5"];
       edge [color="#888888"];
       project [label="Project"];

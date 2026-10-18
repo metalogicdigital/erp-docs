@@ -41,7 +41,7 @@ sphinx_tabs_disable_css_loading = True
 
 graphviz_output_format = 'svg'
 graphviz_dot_args = [
-    '-Gfontname=Inter', '-Nfontname=Inter', '-Efontname=Inter',
+    '-Gfontname=sans-serif', '-Nfontname=sans-serif', '-Efontname=sans-serif',
     '-Gbgcolor=transparent', '-Nfontsize=11', '-Efontsize=10',
 ]
 

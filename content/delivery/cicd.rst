@@ -50,7 +50,7 @@ The release flow
    :caption: From a merged pull request to a running release
 
    digraph release {
-      rankdir=LR;
+      rankdir=TB; nodesep=0.3; ranksep=0.4;
       node [shape=box, style="rounded,filled", fillcolor="#F8F8F8", color="#D5D5D5"];
       edge [color="#888888"];
       merge [label="PR merged\nto main"];

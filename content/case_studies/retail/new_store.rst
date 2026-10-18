@@ -11,17 +11,21 @@ checked by the system.
    :caption: New store go-live, from company to first bill
 
    digraph ns {
-      rankdir=LR;
+      rankdir=TB; nodesep=0.3; ranksep=0.45;
       node [shape=box, style="rounded,filled", fillcolor="#F8F8F8", color="#D5D5D5"];
       edge [color="#888888"];
-      a [label="1. Store company\nstate, GSTIN, zone"];
-      b [label="2. Warehouse,\nlocations, operations"];
-      c [label="3. Store node\nand licence"];
-      d [label="4. Store server\n(container stack)"];
-      e [label="5. Masters\ninitial load"];
-      f [label="6. POS, users,\nopening stock"];
-      g [label="7. Verify\nand go live", fillcolor="#e6f2f2", color="#017e84"];
-      a -> b -> c -> d -> e -> f -> g;
+      { rank=same;
+        a [label="1. Store company\nstate, GSTIN, zone"];
+        b [label="2. Warehouse,\nlocations, operations"];
+        c [label="3. Store node\nand licence"];
+        d [label="4. Store server\n(container stack)"]; }
+      { rank=same;
+        e [label="5. Masters\ninitial load"];
+        f [label="6. POS, users,\nopening stock"];
+        g [label="7. Verify\nand go live", fillcolor="#e6f2f2", color="#017e84"]; }
+      a -> b -> c -> d;
+      d -> e;
+      e -> f -> g;
    }
 
 Step 1: Create the store company

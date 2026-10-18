@@ -17,17 +17,21 @@ into standard Odoo loyalty programs that the stores apply locally, in real time.
    :caption: Design at HO, apply at the till
 
    digraph promo {
-      rankdir=LR;
+      rankdir=TB; nodesep=0.3; ranksep=0.45;
       node [shape=box, style="rounded,filled", fillcolor="#F8F8F8", color="#D5D5D5"];
       edge [color="#888888"];
-      pool [label="Item pools\nbuy / get"];
-      studio [label="Promotion Studio\nslabs, benefits", fillcolor="#f3eef1", color="#714B67"];
-      test [label="Sample testing"];
-      coll [label="One serial,\none promotion"];
-      alloc [label="Allocation\nstores + period"];
-      sync [label="Priority live sync\nto allocated stores"];
-      pos [label="Store POS engine\nauto-apply", fillcolor="#e6f2f2", color="#017e84"];
-      pool -> studio -> test -> coll -> alloc -> sync -> pos;
+      { rank=same;
+        pool [label="Item pools\nbuy / get"];
+        studio [label="Promotion Studio\nslabs, benefits", fillcolor="#f3eef1", color="#714B67"];
+        test [label="Sample testing"];
+        coll [label="One serial,\none promotion"]; }
+      { rank=same;
+        alloc [label="Allocation\nstores + period"];
+        sync [label="Priority live sync\nto allocated stores"];
+        pos [label="Store POS engine\nauto-apply", fillcolor="#e6f2f2", color="#017e84"]; }
+      pool -> studio -> test -> coll;
+      coll -> alloc;
+      alloc -> sync -> pos;
    }
 
 Building blocks

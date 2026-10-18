@@ -15,30 +15,27 @@ Sync** (`mtl_live_sync`) is the engine we built to provide all four.
    :caption: Change-data-capture pipeline, one per site
 
    digraph cdc {
-      rankdir=LR;
+      rankdir=TB; nodesep=0.35; ranksep=0.45;
       node [shape=box, style="rounded,filled", fillcolor="#F8F8F8", color="#D5D5D5"];
       edge [color="#888888"];
 
       subgraph cluster_ho {
-         label="Head office"; color="#714B67"; fontcolor="#714B67";
-         hodb [label="Odoo DB\n(PostgreSQL WAL)"];
-         deb [label="Debezium\nlogical decoding"];
-         kafka [label="Kafka\n(single-partition, ordered)"];
-         mapper [label="Mapper\napplies sync rules"];
-         ledger [label="CDC ledger\nevents + deliveries"];
-         ctrl [label="Controller\noutbox per record"];
-         workers [label="Delivery workers\n(scale out)"];
-         hodb -> deb -> kafka -> mapper -> ledger -> ctrl -> workers;
+         label="Sending site (HO or store)"; color="#714B67"; fontcolor="#714B67";
+         { rank=same; hodb [label="Odoo DB\n(PostgreSQL WAL)"]; deb [label="Debezium\nlogical decoding"];
+           kafka [label="Kafka\nordered topic"]; mapper [label="Mapper\napplies sync rules"]; }
+         { rank=same; workers [label="Delivery workers\n(scale out)"]; ctrl [label="Controller\noutbox per record"];
+           ledger [label="CDC ledger\nevents + deliveries"]; }
+         hodb -> deb -> kafka -> mapper;
+         mapper -> ledger -> ctrl -> workers;
       }
 
       subgraph cluster_store {
-         label="Each store"; color="#017e84"; fontcolor="#017e84";
-         recv [label="Receiver\n/apply (ORM, idempotent)"];
-         sdb [label="Store Odoo DB"];
+         label="Receiving site"; color="#017e84"; fontcolor="#017e84";
+         { rank=same; recv [label="Receiver /apply\nORM, idempotent"]; sdb [label="Odoo DB"]; }
          recv -> sdb;
       }
 
-      workers -> recv [label="HTTPS + per-node key", fontcolor="#888888"];
+      workers -> recv [label="HTTPS / push stream\nper-node key", fontcolor="#888888"];
    }
 
 Capture without touching the application

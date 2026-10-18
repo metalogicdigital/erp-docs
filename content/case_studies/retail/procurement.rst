@@ -10,7 +10,7 @@ the stores can hold?) and the **margin** (are we buying at a price that sells pr
    :caption: From store demand to purchase order
 
    digraph p {
-      rankdir=LR;
+      rankdir=TB; nodesep=0.4; ranksep=0.4;
       node [shape=box, style="rounded,filled", fillcolor="#F8F8F8", color="#D5D5D5"];
       edge [color="#888888"];
       si [label="Store indent\n(each store)"];

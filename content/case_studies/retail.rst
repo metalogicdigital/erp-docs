@@ -61,21 +61,25 @@ and MetaLogic platform modules on top of the standard apps:
    :caption: The retail value chain, end to end
 
    digraph vc {
-      rankdir=LR;
-      node [shape=box, style="rounded,filled", fillcolor="#F8F8F8", color="#D5D5D5", fontsize=10];
+      rankdir=TB; nodesep=0.3; ranksep=0.45;
+      node [shape=box, style="rounded,filled", fillcolor="#F8F8F8", color="#D5D5D5"];
       edge [color="#888888"];
-      md [label="Master data\nhierarchy, prices,\nGST bands"];
-      pl [label="Planning\nMBQ, targets,\nvendor visits"];
-      pr [label="Procurement\nindent, PI, PO"];
-      gr [label="GRC\nreceive, serialise,\nprice"];
-      ds [label="Distribution\nauto PO, batches,\ne-way bills"];
-      st [label="Store\ninwarding"];
+      { rank=same;
+        md [label="Master data\nhierarchy, prices,\nGST bands"];
+        pl [label="Planning\nMBQ, targets,\nvendor visits"];
+        pr [label="Procurement\nindent, PI, PO"];
+        gr [label="GRC\nreceive, serialise,\nprice"];
+        ds [label="Distribution\nauto PO, batches,\ne-way bills"]; }
+      { rank=same;
+        st [label="Store\ninwarding"];
+        ps [label="POS\npiece-level sale"];
+        ho [label="Back to HO\ninventory, journals,\nincentives"];
+        an [label="Analytics\nreal time", fillcolor="#f3eef1", color="#714B67"]; }
       pm [label="Promotions\nstudio + engine"];
-      ps [label="POS\npiece-level sale"];
-      ho [label="Back to HO\ninventory, journals,\nincentives"];
-      an [label="Analytics\nreal time", fillcolor="#f3eef1", color="#714B67"];
-      md -> pl -> pr -> gr -> ds -> st -> ps -> ho -> an;
-      pm -> ps;
+      md -> pl -> pr -> gr -> ds;
+      ds -> st;
+      st -> ps -> ho -> an;
+      ps -> pm [dir=back];
    }
 
 Highlights:

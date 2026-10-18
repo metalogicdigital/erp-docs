@@ -11,20 +11,24 @@ receipt flow is therefore the most heavily guarded process in the solution.
    :caption: Inbound flow at the head office
 
    digraph g {
-      rankdir=LR;
+      rankdir=TB; nodesep=0.3; ranksep=0.45;
       node [shape=box, style="rounded,filled", fillcolor="#F8F8F8", color="#D5D5D5"];
       edge [color="#888888"];
-      po [label="Purchase order"];
-      le [label="Logistic entry\nLR, transporter, bales"];
-      tc [label="Transport check"];
-      dc [label="Delivery check\nbale scan"];
-      op [label="Open parcel"];
-      rq [label="Set received qty\nexcess / shortage"];
-      vs [label="Verification scan"];
-      md [label="Mandatory data\nfill-in"];
-      val [label="Validate GRC\nserials minted, priced", fillcolor="#e6f2f2", color="#017e84"];
-      bill [label="Draft bill +\ndebit note"];
-      po -> le -> tc -> dc -> op -> rq -> vs -> md -> val -> bill;
+      { rank=same;
+        po [label="Purchase order"];
+        le [label="Logistic entry\nLR, transporter, bales"];
+        tc [label="Transport check"];
+        dc [label="Delivery check\nbale scan"];
+        op [label="Open parcel"]; }
+      { rank=same;
+        rq [label="Set received qty\nexcess / shortage"];
+        vs [label="Verification scan"];
+        md [label="Mandatory data\nfill-in"];
+        val [label="Validate GRC\nserials minted, priced", fillcolor="#e6f2f2", color="#017e84"];
+        bill [label="Draft bill +\ndebit note"]; }
+      po -> le -> tc -> dc -> op;
+      op -> rq;
+      rq -> vs -> md -> val -> bill;
    }
 
 Inbound logistics before the goods arrive
