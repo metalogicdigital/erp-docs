@@ -24,7 +24,8 @@ checked by the system.
         f [label="6. POS, users,\nopening stock"];
         g [label="7. Verify\nand go live", fillcolor="#e6f2f2", color="#017e84"]; }
       a -> b -> c -> d;
-      d -> e;
+      d -> e [constraint=false];
+      a -> e [style=invis];
       e -> f -> g;
    }
 

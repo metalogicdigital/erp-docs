@@ -30,7 +30,8 @@ into standard Odoo loyalty programs that the stores apply locally, in real time.
         sync [label="Priority live sync\nto allocated stores"];
         pos [label="Store POS engine\nauto-apply", fillcolor="#e6f2f2", color="#017e84"]; }
       pool -> studio -> test -> coll;
-      coll -> alloc;
+      coll -> alloc [constraint=false];
+      pool -> alloc [style=invis];
       alloc -> sync -> pos;
    }
 

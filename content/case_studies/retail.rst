@@ -77,7 +77,8 @@ and MetaLogic platform modules on top of the standard apps:
         an [label="Analytics\nreal time", fillcolor="#f3eef1", color="#714B67"]; }
       pm [label="Promotions\nstudio + engine"];
       md -> pl -> pr -> gr -> ds;
-      ds -> st;
+      ds -> st [constraint=false];
+      md -> st [style=invis];
       st -> ps -> ho -> an;
       ps -> pm [dir=back];
    }

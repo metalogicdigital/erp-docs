@@ -27,7 +27,8 @@ receipt flow is therefore the most heavily guarded process in the solution.
         val [label="Validate GRC\nserials minted, priced", fillcolor="#e6f2f2", color="#017e84"];
         bill [label="Draft bill +\ndebit note"]; }
       po -> le -> tc -> dc -> op;
-      op -> rq;
+      op -> rq [constraint=false];
+      po -> rq [style=invis];
       rq -> vs -> md -> val -> bill;
    }
 
