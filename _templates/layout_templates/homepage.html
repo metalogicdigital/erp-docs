@@ -1,0 +1,57 @@
+<div id="o_content">
+    <section class="o_content_fw_banner">
+        <h1 class="text-white">{{ _("MetaLogic ERP Docs") }}</h1>
+    </section>
+    <section>
+        <p class="lead text-dark">
+            How we take Odoo from a standard install to a system that runs a whole business:
+            industry case studies, the capabilities we added on top of Odoo, and how we
+            build, test and ship them.
+        </p>
+        <div class="row gx-lg-5">
+            <div class="col-lg-6">
+                <h2><a href="{{ pathto('case_studies') }}">{{ _("Case Studies") }}</a></h2>
+                <p class="text-dark">{{ _("Real customer problems, by industry, and how we solved them on Odoo 17.") }}</p>
+                <h5 class="text-dark pt-3 text-uppercase fw_bold">{{ _("Industries") }}</h5>
+                <ul class="list-unstyled">
+                    <li>
+                        <a href="{{ pathto('case_studies/retail') }}" class="stretched-link">
+                            {{ _("Retail: multi-store fashion and lifestyle chain") }}
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-lg-6">
+                <h2 class="border-top pt-4 pt-lg-0"><a href="{{ pathto('case_studies/retail/analytics') }}">{{ _("ERP Analytics") }}</a></h2>
+                <p class="text-dark">{{ _("Operational and accounting reports in Odoo, plus a real-time analytics warehouse for chain-wide reporting.") }}</p>
+                <h5 class="text-dark pt-3 text-uppercase fw_bold">{{ _("Top Links") }}</h5>
+                <ul class="list-unstyled">
+                    <li><a href="{{ pathto('case_studies/retail/analytics') }}#analytics-architecture" class="stretched-link">{{ _("Analytics architecture") }}</a></li>
+                    <li><a href="{{ pathto('case_studies/retail/analytics') }}#report-catalogue" class="stretched-link">{{ _("Report catalogue") }}</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="row gx-lg-5">
+            <div class="col-lg-6">
+                <h2 class="border-top pt-4"><a href="{{ pathto('delivery') }}">{{ _("How We Deliver") }}</a></h2>
+                <p class="text-dark">{{ _("The engineering system behind every project: planning, pipelines, testing and support.") }}</p>
+                <h5 class="text-dark pt-3 text-uppercase fw_bold">{{ _("Top Links") }}</h5>
+                <ul class="list-unstyled">
+                    <li><a href="{{ pathto('delivery/sdlc') }}" class="stretched-link">{{ _("SDLC and the Project Planner") }}</a></li>
+                    <li><a href="{{ pathto('delivery/cicd') }}" class="stretched-link">{{ _("CI/CD pipeline") }}</a></li>
+                    <li><a href="{{ pathto('delivery/defect_pipeline') }}" class="stretched-link">{{ _("Defect-fixing pipeline") }}</a></li>
+                </ul>
+            </div>
+            <div class="col-lg-6">
+                <h2 class="border-top pt-4"><a href="{{ pathto('case_studies/retail/module_catalogue') }}">{{ _("Module Catalogue") }}</a></h2>
+                <p class="text-dark">{{ _("Every addon in the retail solution: what it does and the capabilities it adds.") }}</p>
+                <h5 class="text-dark pt-3 text-uppercase fw_bold">{{ _("Top Links") }}</h5>
+                <ul class="list-unstyled">
+                    <li><a href="{{ pathto('case_studies/retail/live_sync') }}" class="stretched-link">{{ _("Head office to store sync (CDC)") }}</a></li>
+                    <li><a href="{{ pathto('case_studies/retail/promotions') }}" class="stretched-link">{{ _("Promotion Studio") }}</a></li>
+                    <li><a href="{{ pathto('case_studies/retail/platform') }}" class="stretched-link">{{ _("Platform and supportability") }}</a></li>
+                </ul>
+            </div>
+        </div>
+    </section>
+</div>

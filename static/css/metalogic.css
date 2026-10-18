@@ -1,0 +1,81 @@
+/* Site-specific additions on top of the vendored Odoo documentation theme. */
+
+.mtl_logo {
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    text-decoration: none;
+}
+
+.mtl_logo img {
+    margin-bottom: 0 !important;
+}
+
+.o_main_header .o_logo_wrapper > .o_logo span.mtl_wordmark,
+.o_get_help .mtl_logo .mtl_wordmark {
+    font-family: 'Roboto Slab', serif;
+    font-weight: 500;
+    font-size: 1.25rem;
+    color: #282F33;
+}
+
+.mtl_attribution,
+.mtl_attribution a {
+    color: #6c757d;
+}
+
+/* Key figures strip used on overview pages. */
+.mtl_stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+    margin: 1.5rem 0 2rem;
+}
+
+.mtl_stat {
+    border: 1px solid #DEE2E6;
+    border-radius: .5rem;
+    padding: .9rem 1rem;
+    background: #F8F8F8;
+}
+
+.mtl_stat b {
+    display: block;
+    font-size: 1.6rem;
+    line-height: 1.1;
+    color: #714B67;
+}
+
+.mtl_stat span {
+    font-size: .85rem;
+    color: #4a4f52;
+}
+
+/* Graphviz diagrams scale to the content column. */
+.graphviz img,
+img.graphviz,
+object.graphviz {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Wide tables scroll inside their block instead of the page. */
+article .table-responsive,
+article table.docutils {
+    display: block;
+    overflow-x: auto;
+}
+
+/* Keep the wordmark on one line on small screens. */
+.mtl_logo {
+    white-space: nowrap;
+}
+
+@media (max-width: 991.98px) {
+    .o_main_header .o_logo_wrapper > .o_logo span:not(.mtl_wordmark) {
+        display: none;
+    }
+    .o_main_header .o_logo_wrapper > .o_logo span.mtl_wordmark {
+        font-size: 1.05rem;
+    }
+}
