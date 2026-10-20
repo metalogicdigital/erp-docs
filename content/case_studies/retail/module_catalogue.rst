@@ -62,6 +62,11 @@ Store network and planning
    * - `mtl_retail_vendor_visit`
      - Buyer visit planning, geofenced check-in at the vendor site, visit notes and samples
        linked to indents.
+   * - `mtl_geofence`
+     - Rules that let a document such as the purchase indent be created only at the vendor's
+       location: check-in or live location, per-device accuracy and QR / photo proof, circle and
+       polygon vendor zones, bulk geocoding, first-visit locations approved on a map, overrides
+       and a full log. Installed switched off.
 
 Procurement and inbound
 =======================

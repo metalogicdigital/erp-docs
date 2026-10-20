@@ -94,6 +94,10 @@ Routing at submit is automatic:
 Choosing an **offer** on a line overrides the category's default margin with the offer's margin,
 so a planned promotion is priced in at the buying stage.
 
+Where a PI is raised can be controlled too: a geofence rule can require the buyer to be at the
+vendor's location, checked in or by live location, before the PI is saved
+(see :ref:`planning/geofence`).
+
 Purchase order
 ==============
 
