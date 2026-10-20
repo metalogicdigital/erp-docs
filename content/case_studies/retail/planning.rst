@@ -96,11 +96,11 @@ Visit plan
    for. Managers see the buying team's travel plan for the week.
 
 Geofenced check-in
-   Each vendor site is stored with its location and a geofence radius. The buyer checks in from
-   a mobile browser, and the check-in is accepted only when the device's location is inside the
-   vendor's geofence. Time and coordinates are recorded on the visit, and a visit cannot be
-   closed without a valid check-in and check-out, so vendor meetings and travel claims can be
-   verified.
+   Each vendor site is stored with its location and a geofence. The buyer checks in from a
+   laptop or phone browser, and the check-in is accepted only when the device's location is
+   inside the vendor's geofence. Time, coordinates and accuracy are recorded, so vendor meetings
+   and travel claims can be verified, and the same check-in decides whether a purchase indent may
+   be raised (see :ref:`planning/geofence` below).
 
 Visit outcome
    Notes, photographs of selected designs and samples, quoted prices and proposed quantities
@@ -110,6 +110,122 @@ Visit outcome
 Visit analytics
    Visits per buyer and vendor, how many visits turned into indents and purchase orders, and the
    sell-through of what each visit bought, linking the buying trip to what happened on the shelf.
+
+.. _planning/geofence:
+
+Purchase indents only at the vendor's location
+==============================================
+
+The buying team's policy is that a purchase indent is raised **on the vendor's floor**, where the
+designs are selected, and not later from the desk. **MetaLogic Vendor Geofence** (`mtl_geofence`)
+enforces that policy and makes every part of it configurable.
+
+.. graphviz::
+   :caption: Raising a purchase indent under the geofence
+
+   digraph gf {
+      rankdir=TB; nodesep=0.35; ranksep=0.45;
+      node [shape=box, style="rounded,filled", fillcolor="#F8F8F8", color="#D5D5D5"];
+      edge [color="#888888"];
+      { rank=same;
+        ci [label="Buyer checks in\nat the vendor"];
+        lo [label="Browser location\n(Wi-Fi or GPS)"];
+        zn [label="Inside the vendor's\nzone?", fillcolor="#fdf3e4", color="#f39c1e"];
+        pi [label="Purchase indent\nsaved", fillcolor="#e6f2f2", color="#017e84"]; }
+      { rank=same;
+        bl [label="Save blocked\nwith the reason"];
+        ov [label="Override\nrequested"];
+        ap [label="Approver\napproves", fillcolor="#fdf3e4", color="#f39c1e"]; }
+      ci -> lo -> zn;
+      zn -> pi [label="yes", fontcolor="#888888"];
+      ci -> bl [style=invis];
+      zn -> bl [label="no", fontcolor="#888888", constraint=false];
+      bl -> ov -> ap;
+      ap -> pi [label="one indent", fontcolor="#888888", constraint=false];
+   }
+
+Rules
+-----
+
+A rule names the document it protects (the purchase indent first; any other document can be
+added the same way) and how strictly it applies:
+
+.. list-table::
+   :header-rows: 1
+   :widths: 25 75
+
+   * - Setting
+     - Options
+   * - Mode
+     - **Off**, **Log only** (nothing is stopped, every result is logged: used to roll out),
+       **Warn** (saved, the buyer is warned and the indent gets a note) or **Block**.
+   * - Validation
+     - A **check-in** at the vendor that stays valid for a number of hours, the **live location**
+       on every save, or **both**.
+   * - What is checked
+     - A new indent saved from the form, Duplicate, import from a file (not checked, checked per
+       record, or not allowed) and any button, for example Confirm. Records created by the
+       system, such as indents arriving from the stores or orders created by approvals, are never
+       checked.
+   * - Scope
+     - A filter (for example only the PO types bought from a vendor), companies, user groups,
+       exempt users and groups, and allowed days and hours.
+   * - Devices
+     - Laptop browser, phone browser and the mobile app, each allowed or not, with its own maximum
+       location accuracy (a laptop locates itself from Wi-Fi, a phone from GPS) and check-in proof:
+       location only, a **QR code** displayed at the vendor, a **photo**, or both. Optionally a
+       valid QR code is accepted when the device cannot get a location, for example indoors.
+   * - Overrides
+     - Whether buyers can ask for an exception, which group approves it, and whether an approval
+       covers one indent or a number of hours.
+   * - Alerts
+     - A group that is told about every blocked attempt.
+
+Vendor locations
+----------------
+
+Each vendor site is a **circle** (centre and radius) or a **polygon** drawn on a map, with a
+buffer added to absorb location error. Locations come from two sources:
+
+#. **Geocoding in bulk**: every vendor address is placed on the map in the background, falling
+   back from the street to the PIN code to the city. A geocoded location is *provisional* and gets
+   a larger radius the coarser it is. OpenStreetMap is used by default; a self-hosted geocoder or
+   Google can be configured instead.
+#. **The first visit**: when a buyer checks in at a vendor without an approved location, the
+   buyer's position is proposed as the vendor's location. A manager compares it on the map with
+   the geocoded address and approves it, after which the normal radius applies. The rule decides
+   whether the buyer may carry on meanwhile, must wait for the approval, or is blocked.
+
+.. example::
+   A buyer at a mill on the outskirts saves a new indent. The system answers *"You have not
+   checked in at the vendor"* and offers **Check in at the vendor**. The check-in reads the
+   laptop's location, 25 m accurate, finds it 12 m from the mill's geocoded address, accepts it
+   and proposes the point as the mill's location. The indent then saves. The next day, from head
+   office, the same buyer is told *"You are 14.2 km from the nearest location of the vendor
+   (allowed: 250 m)"*; a request for an override, approved by the buying head, lets exactly one
+   indent through.
+
+Audit
+-----
+
+Every attempt is logged with the user, vendor, document, device, position, accuracy, distance
+and result, including attempts that were blocked, so the buying head can see who raises indents
+away from the vendor and why. Check-ins, pending locations and overrides each have their own
+list, and old log entries are purged after a configurable period.
+
+Rolling it out
+--------------
+
+The module is installed with the rule **Off**: no checks, no location requests and no new menus
+for the buyers until a manager switches it on. The usual sequence is to geocode the vendors,
+run in **Log only** for a few weeks to see who would have been blocked, then move to **Warn** and
+**Block**.
+
+.. note::
+   Browsers only share the location with HTTPS sites. When the ERP is reached over a VPN on plain
+   HTTP, IT adds its address to the browser policy *OverrideSecurityRestrictionsOnInsecureOrigin*
+   (Chrome and Edge, pushed by group policy). Until then buyers get a clear message saying so
+   rather than a silent failure.
 
 .. seealso::
    :doc:`procurement` for how MBQ and margin rules gate the purchase indent.
