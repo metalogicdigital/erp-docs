@@ -123,6 +123,50 @@ Mass editing and advanced list search
 Report delivery options
    Print, download or open-in-tab for every PDF report, with a default per report.
 
+One place for operating policy
+==============================
+
+Retail operations accumulate switches: may stock go negative, who can approve a gate pass, how
+long a gift voucher lives, how far back may an accountant post. **Retail Operations
+Configuration** (`mtl_ops_config`) keeps all of them on two screens instead of scattering them
+over the settings of a dozen modules.
+
+Master policy
+   One *default* policy and, optionally, one **site policy** per company, since every store is a
+   company. A store without its own policy follows the default; a new site policy starts as a copy
+   of it, and *Copy to companies* pushes one policy to many stores.
+
+User profiles
+   Rights and methods per group of users, such as approval limits, backdated activation and lock
+   days, with a **role policy** that overrides the site policy for that profile. A **user
+   assignment** gives a person a different profile in each store they work in.
+
+Each feature module adds its own page to both forms, so a new capability extends the same two
+screens rather than adding a third. Every change is tracked in the record's history.
+
+Negative stock policy
+   `mtl_stock_policy` decides what happens when a movement would take stock below zero at its
+   exact location: **stop** it, **warn** and record the user's acknowledgement, or **ignore** it.
+   The method resolves from the most specific setting to the least: serial-tracked pieces (always
+   stop), product, product category, user profile, master policy. Moves applied by live sync,
+   inventory adjustments and POS deliveries whose sale is already paid are never blocked. Every
+   stop and warning, including the blocked ones, lands in an exceptions log with the user,
+   document, product, lot, location and quantities. The module installs **switched off**.
+
+Role-based access
+   `mtl_role_access` lets an administrator tick the menus of a role and the operations allowed on
+   each: read, create, edit, delete, **release**, **cancel**, **print**, **export** and
+   **import**. Saving a role generates the matching groups, access rights and record rules, so
+   the limits hold for API calls and reports as well as for the menu. Release and cancel buttons
+   (post an invoice, validate a transfer, confirm an order) are refused for roles that lack them,
+   and a **lock-days** profile setting stops anyone posting entries dated further back than
+   allowed.
+
+.. example::
+   A cashier-supervisor role may release and print POS-related documents but not cancel them. The
+   same person, on the buying team of a second store, carries a different profile there with a
+   higher approval limit. Neither needs a custom group.
+
 Safe staging copies and the admin toolkit
 =========================================
 

@@ -178,3 +178,79 @@ HO defines **audit plans** per store: by attribute, ageing, brand type or serial
 or store audit. Plans are pushed to the stores, serials under an active plan are frozen for
 dispatch, counting sessions support scan, lock and recount, and adjustments approved at HO are
 applied remotely. Audit reports compare HO's view with the store counts.
+
+Physical stock audit plans
+--------------------------
+
+For a full physical count, **Stock Audit** (`mtl_stock_audit`) runs a plan through a fixed life
+cycle: *New*, *Activated*, *Stock Updated*, *Completed*.
+
+* A plan names the store, the stock point (an internal location, counted exactly, without its
+  sub-locations), the plan date and the activation date.
+* **Item-wise plans** list products or serials, imported from a spreadsheet with every rejected
+  row reported. **Assortment-wise plans** describe the items by criteria (category and all its
+  sub-categories, attribute values, articles, an RSP range), where every condition in a row must
+  match and any row may match.
+* **Activation** freezes the item set and stores the book quantity of each item and serial at the
+  activation date as a snapshot. A backdated activation needs a profile right.
+* Many people can record stock entries against one plan. **Verify / Update stock** posts a single
+  adjustment for the plan from the variance, and a plan can be reverted until it is completed.
+  *Completed* is final.
+* Plans can be allocated to several stores, and variance reports compare the counts with the
+  snapshot.
+
+Daily stock audit from the salesperson's phone
+----------------------------------------------
+
+A full count is a project. The **daily audit** turns stock accuracy into a habit: each salesperson
+counts one section of the store a day, blind, from an app, and only inside the store.
+(`mtl_daily_audit`, with a mobile app and a gateway at head office.)
+
+#. A manager **pairs** a phone by showing a one-time QR code in Odoo; the phone scans it.
+#. The phone proves it is in the store: the store's Wi-Fi access point and/or a GPS position inside
+   the geofence, no mock location, and optionally a device-integrity check. It receives a
+   presence token that expires after fifteen minutes, and the **server** checks it on every call,
+   so a modified app cannot skip the rule.
+#. The salesperson signs in and sees today's assigned section, **without expected quantities**.
+#. *Start* takes the section's snapshot on the server. Scans from the camera, a Bluetooth scanner
+   or an RFID sled in keyboard mode are saved on the phone first and uploaded in batches, so
+   nothing is lost when the Wi-Fi drops.
+#. On *Finish count* the server compares the scans with the snapshot plus whatever was sold or
+   moved meanwhile. With the recount pass on, the missing items are revealed once for a targeted
+   search; then the count goes to the store manager, who decides each difference. **Only approved
+   differences adjust stock.**
+
+Everything is driven by the store's audit settings: presence rule, fence, access points, count
+windows, device policy and approval levels. When the phone is on mobile data instead of store
+Wi-Fi, the app starts a **phone VPN** to head office through the phone's own VPN system, only
+while the app is in use and only for the store and HO networks. A short-lived certificate per
+phone is issued after a successful presence check, and revoking the device in Odoo revokes the
+certificate, so a lost phone cannot reconnect.
+
+Gate passes
+===========
+
+Not everything that leaves a building is a sale or a purchase: a few pieces go to a photo shoot,
+fabric to a tailor for repair, samples to an exhibition, a vendor's sample comes in without an
+invoice. **Gate Pass** (`mtl_gatepass`) records every such movement through the gate.
+
+* **Types** set the direction (outward or inward), the destination (another store, another
+  location of the same company, or a contact), whether it is returnable and in how many days,
+  whether approval is needed, and the numbering.
+* **The request** records who asked, why, the source, the destination, the transport (transporter,
+  vehicle, driver, LR and e-way bill number) and the items, with serials mandatory for tracked
+  products.
+* **Approval** is by users whose profile allows it, optionally up to a maximum value. Approving
+  your own request needs an explicit policy switch.
+* **On approval**, a type that creates a sale order raises one to the destination (for a store,
+  the store company) at zero, cost or sales price. For a location or a contact, the delivery goes
+  to a **transit location**, so the goods stay company stock while they are out.
+* **Gate exit** and **inward at the destination** are recorded with who and when, with a
+  difference per item between what left and what arrived, returns, and **overdue follow-up** for
+  returnable passes.
+
+.. example::
+   Six dresses leave for a catalogue shoot. The gate pass is approved by the visual-merchandising
+   head, the guard records the exit, and the six serials sit in the transit location, still on
+   the books, until the shoot's stylist returns five. The difference of one is on the pass, and
+   the overdue list shows who has not returned it.

@@ -131,5 +131,38 @@ Inside the stores, the same principle applies on a smaller scale: the change-cap
 workers are a consumer group that can be scaled out, and a separate priority worker pool carries
 price and promotion changes so they never wait behind a backlog of transactions.
 
+Scaling the stores
+------------------
+
+A store used to be one container: till users, scheduled jobs and sync traffic shared the same
+processes. The **store stack** now has the head office's shape on a store-sized machine:
+
+.. list-table::
+   :header-rows: 1
+   :widths: 22 78
+
+   * - Node
+     - Role
+   * - UI nodes (two)
+     - Serve cashiers and back-office users, with scheduled jobs off. Updating one while the
+       other serves keeps the tills answering.
+   * - Job node
+     - Runs the store's scheduled jobs and the inbound integration calls.
+   * - Sync node
+     - A second job-type node with scheduled jobs off, dedicated to the change-capture traffic
+       from head office, so a burst of price and promotion changes never starves the tills. The
+       load balancer sends sync traffic to it first and to the job node only as a fallback.
+   * - Load balancer
+     - One address for the store's users and for head office, with health checks.
+
+Rolling updates under load were tested with a probe every second: forcing an update of the UI
+nodes lost no request, and killing a UI node mid-session lost one in thirty-eight. A store keeps
+its **way back**: the old single-container deployment is preserved, so a store can return to it
+with two commands.
+
+The store's automatic upgrade understands both shapes. On a store stack it builds a release image,
+runs the module migration in a separate container on the store's network, and rolls the stack; on
+a single-container store it keeps the older in-place path.
+
 .. seealso::
    :doc:`../../delivery/cicd` for how images are built, migrated and rolled out.
