@@ -28,9 +28,16 @@ tested, shipped and supported. Every MetaLogic engagement runs on the same engin
       reproduction, root cause, regression tests and a linked pull request, with an AI agent that
       can run the whole loop.
 
+   .. card:: Fleet operations
+      :target: delivery/fleet_console
+
+      One console for the head office and every store: heartbeats, one-click and chosen-store
+      upgrades, scaling, database switching and licensing mode.
+
 .. toctree::
    :titlesonly:
 
    delivery/sdlc
    delivery/cicd
    delivery/defect_pipeline
+   delivery/fleet_console

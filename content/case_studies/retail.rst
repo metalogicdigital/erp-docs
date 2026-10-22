@@ -104,7 +104,16 @@ Highlights:
   idempotent and loop-free.
 * **A virtual company per store at HO**, giving one database for consolidated books and genuine
   inter-company documents between GSTINs.
-* **Real-time analytics** with full parity to the ledger.
+* **Real-time analytics** with full parity to the ledger, a business-owner dashboard with KPI
+  thresholds and alerts, AI-written insights and a mobile app with filter-aware summaries.
+* **Incentives that follow the offer**: an engine inside the Promotion Studio that scopes by item
+  pool, pays on slabs and caps, tests on past sales and reverses on exchanges.
+* **Stock control from the floor**: daily blind counts from a phone inside the store, planned
+  physical audits, gate passes and a negative-stock policy.
+* **Central operating policy**: one master policy, per-store site policies and role-based access
+  with release, cancel and print rights.
+* **A fleet console** that upgrades, scales and monitors the head office and every store, on
+  stacks that roll updates without dropping a bill.
 * **Supportability built in**: 1,800+ coded errors with remediation and escalation, background
   jobs, global number search and record lineage tracing.
 

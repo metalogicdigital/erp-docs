@@ -163,6 +163,56 @@ Bringing a store onto live sync is a two-step operation from the same screen:
 * **Reconcile identities** pages through the peer's natural keys and links only unambiguous
   matches, so a store that already had data is joined without duplicates.
 
+Cutting over from the old integration
+=====================================
+
+Most chains arrive with point-to-point integrations between the head office and each store:
+scheduled jobs that call a REST API in both directions. Switching a store from those to live sync
+in one night is risky, so the two can run **side by side** and be switched over one direction at a
+time.
+
+Per-process REST guard
+   Each Odoo process declares whether it may *write* to the old integration. A process with the
+   switch off refuses every write call to the head office (post, put, patch, delete) but may still
+   read. Customer look-ups, other-store bill look-ups for exchanges, price sync and credit-note
+   balances therefore keep working while live sync carries the writes, and a worker that has
+   not been switched cannot slip a duplicate document through the old path.
+
+Health heartbeat per node
+   Every sync node pings head office on a fixed interval from inside its web workers, without
+   needing a scheduled job, so an old system running next to the new one on the same database
+   needs no change. Head office shows each node's last contact and whether it is stale.
+
+Final cut-off
+   When a store's flows are proven on live sync, its remaining old push jobs are disabled in one
+   step, so the old path goes quiet cleanly instead of fading out.
+
+Backfilling history
+===================
+
+Live sync carries what happens from the day a store goes live. The months before that, and any
+period the old integration lost, are loaded by a separate **history backfill** tool, so the head
+office's books and stock are complete without replaying months of events.
+
+* It works in five steps, **POS orders, accounting, stock, valuation and quants**, and writes
+  head-office rows with plain SQL for speed.
+* Every row it writes is **registered in the sync identity table**, so a later live change to
+  the same document updates that row instead of creating a duplicate, and each transaction
+  carries the loop guard.
+* Three commands: **verify** (read-only: what is missing at head office), **plan** (the whole
+  run, rolled back at the end, to see the effect) and **apply**. Running it again inserts
+  nothing, and an advisory lock keeps two runs of the same store apart.
+* Rehearsed on a copy of a store's full history: every POS order present at head office, every journal
+  balanced, valuation quantity equal to on-hand for every product, and the FIFO layers identical
+  to those Odoo would have built itself.
+
+.. example::
+   A store went live on the new sync in June, but the old integration had stopped pushing weeks
+   earlier, so head office was missing most of the earlier bills. *Verify* counts the missing
+   orders and the journal gaps they cause, *plan* shows on a copy of both databases exactly what
+   would be written, and *apply* writes it once, so the live changes that follow update those rows
+   rather than duplicate them.
+
 .. seealso::
    - :doc:`architecture` for how live sync fits into the HO and virtual-store design.
    - :doc:`promotions` for record-targeted publishing of promotions to selected stores.

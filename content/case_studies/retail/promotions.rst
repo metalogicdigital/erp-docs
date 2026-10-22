@@ -260,3 +260,27 @@ Vouchers, cards and vendor-funded offers
 * **Classic attribute-filter promotions** remain available: rules by any attribute or descriptor
   slot, category list or **days-ageing slab** (0–30 up to 330–360 days), by serial list, by GRC or
   by cart, with bulk import of promotions.
+
+Numbered gift vouchers
+----------------------
+
+Where the business needs a traceable register of every voucher, **Gift Vouchers**
+(`mtl_gift_voucher`) adds numbered vouchers on top of the gift-card program.
+
+* **Two kinds**. *Promotional* vouchers are given away, for example against a bill-value offer:
+  no liability, and redemption is a discount. *Prepaid* vouchers are sold to a customer or a
+  business buyer: issuing raises a customer invoice that credits a prepaid-voucher liability
+  account, and redemption debits it.
+* **Numbering by pattern**. A category defines prefix, suffix, number length, padding and start
+  number, with tokens for the day, month and year of generation, so `SO/` + `/[MON][YY]` gives
+  `SO/000001/OCT26`. Generation locks the category, so two users never receive the same numbers.
+* **Life cycle**: new, allocated, issued, redeemed, cancelled, expired. Vouchers are **allocated
+  to stores** by number range, booklet or selection, and a voucher allocated to a store can only
+  be redeemed there unless policy allows any store. Validity is a number of days from issue and an
+  absolute date, whichever ends first, in the store's time zone.
+* **Issue and redeem**: issued at the back office (free issue with approval above the user's
+  limit, or a sale with an invoice and an optional discount) or at the till, and redeemed at the
+  till as a tender.
+* **Register and statistics**: allocated to, issued from, on and against which bill, redeemed
+  where, when and against which bill, with counts by status and denomination. Every change is
+  appended to a history that cannot be edited.

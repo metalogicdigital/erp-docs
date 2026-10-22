@@ -121,6 +121,12 @@ Distribution and stores
        remote adjustments, HO audit reports.
    * - `mtl_retail_transport_dashboard`
      - Deliveries by category received vs opened, LR and returns dashboards, stock by company.
+   * - `mtl_stock_audit`
+     - Physical stock-count plans, item-wise or assortment-wise, with an activation snapshot, many entries per plan, one verified adjustment and revert until completed.
+   * - `mtl_gatepass`
+     - Gate passes for goods leaving or entering a site: types, approval, automatic sale order, transit location, gate exit, inward with differences, returns and overdue follow-up.
+   * - `mtl_daily_audit`
+     - Daily blind stock count from a phone app: paired devices, server-side presence check, section snapshots, manager review of differences, phone VPN.
 
 Point of sale and customer
 ==========================
@@ -146,6 +152,8 @@ Point of sale and customer
    * - `mtl_retail_vouchers`
      - Customer credit notes with balances, gift vouchers, loyalty cards, cross-store redemption
        guard, vendor-funded promotions.
+   * - `mtl_gift_voucher`
+     - Numbered promotional and prepaid gift vouchers: pattern numbering, allocation to stores, issue and redemption, register and statistics.
 
 Finance and compliance
 ======================
@@ -186,6 +194,8 @@ Workforce
        documents and expiry, resignation, end-of-service settlement, announcements, HR dashboard.
    * - `mtl_retail_store_checklist`
      - Store opening and closing checklist with daily PDF record.
+   * - `mtl_promo_incentive`
+     - Incentive engine in the Promotion Studio: scope by item pool, slabs, caps, allocation to stores, testing on past sales, ledger, exchange reversals, period lock.
 
 MetaLogic platform
 ==================
@@ -221,3 +231,13 @@ MetaLogic platform
    * - `mtl_retail_analytics`
      - Real-time feed into the analytics warehouse and the retail report pack. See
        :doc:`analytics`.
+   * - `mtl_ops_config`
+     - Master policy (default and per store), user profiles and assignments: one place for the settings of the retail operations modules.
+   * - `mtl_stock_policy`
+     - Stop, warn or ignore negative stock by product, category and profile, with an exceptions log.
+   * - `mtl_role_access`
+     - Roles with menu-level read, create, edit, delete, release, cancel, print, export and import, generated into access rights and record rules; lock days.
+   * - `mtl_upgrade_console`
+     - Fleet console for the head office and stores: heartbeats, upgrades, scaling, database switching and licensing mode. See :doc:`../../delivery/fleet_console`.
+   * - `mtl_ho_dashboard`
+     - Daily, weekly and monthly sales, stock closing and journal checks per company inside Odoo.

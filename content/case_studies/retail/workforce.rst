@@ -67,6 +67,73 @@ Reports
 Structures are replicated to the stores, so the same rules are visible to store managers, and
 the salesperson link on every POS line reaches HO with the order.
 
+Incentive engine in the Promotion Studio
+========================================
+
+Structures like the above are fixed by role and bill line. Merchandisers also want incentives
+that follow **the offer being pushed**: *2% on any piece of last season's ethnic wear, but only in
+these twelve stores, only this month, capped at ₹5,000 a person.* **Promotion Incentives**
+(`mtl_promo_incentive`) therefore lives in the :doc:`Promotion Studio <promotions>`, next to the
+offers it supports, and reuses its building blocks instead of inventing a second set.
+
+.. list-table::
+   :header-rows: 1
+   :widths: 24 76
+
+   * - Studio building block
+     - Role in an incentive
+   * - Item pool
+     - The **scope**: serials, categories, families, brands, attributes, ageing, or any
+       combination. Unlike a promotion, the pool matches the piece **as it was sold**, not what
+       is in stock today.
+   * - Definition
+     - The **scheme**: a percentage of sale value (with or without tax), RSP, gross margin or
+       quantity, or a fixed amount per item or once; slabs on item value, product ageing code or
+       days in stock; a per-person cap; exclusion pools; and a **store target** type that pays on
+       the share of target achieved or on sales value, either on the whole total or band by band.
+       Days in stock count from the HO receipt or from the arrival at the store.
+   * - Allocation
+     - **Where and when**: stores and a period, so one scheme can run in a few stores for a week
+       and a different one elsewhere.
+   * - Sample testing
+     - **Incentive testing**: replay a scheme over past sales to see who would have earned what
+       before anyone is promised anything.
+
+How a month is calculated
+   The engine takes a snapshot of each sold line (salesperson, serial, price, cost, discount) as
+   a *fact*, matches the facts against the scheme and writes a **ledger** entry per employee. A
+   run is idempotent, so running it twice never pays twice, and it executes as a background job
+   with progress. A month of roughly 79,000 sale lines for two stores turns into facts in about a
+   minute.
+
+People are matched by job position
+   Each store has its own job-position master, so the scheme names the role (*sales associate*)
+   and the engine finds it in each company by name. Sales by counters, promoters or anyone without
+   a position are listed separately instead of silently dropped.
+
+Bill-level discounts are spread
+   A promotion applied to the whole bill arrives as a negative line. The engine spreads it over
+   the bill's items, so incentives follow the net price and not the gross.
+
+Exchanges reverse earnings
+   When a piece comes back through an exchange, the engine reverses what it earned, if it
+   earned anything, in the period that follows.
+
+Statements and locking
+   A statement per employee and store shows each line that contributed. When payroll has
+   accepted a period it is **locked**; a period can be locked only after HO holds the bills dated
+   after it, so late-arriving bills cannot change a number already paid.
+
+.. example::
+   A *Move old season* scheme gives sales associates 1% on pieces of ageing codes G1–G12 and 2% on
+   older codes, capped at ₹5,000 each, in two stores for July. Run over a month of real sales it
+   computes the amounts for 282 employees on ₹6.74 crore of sales, a payout of 0.29% of sales,
+   and shows that none of the 183 exchanges had earned anything, so nothing needed reversing. The
+   top earner hits the cap. Only after reading that result does the business activate the scheme.
+
+Incentives are calculated at head office from the sales that live sync delivers, so every store
+that is on live sync is included from its go-live date.
+
 Recruitment to appointment
 ==========================
 

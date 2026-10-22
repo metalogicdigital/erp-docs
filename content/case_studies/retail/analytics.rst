@@ -210,6 +210,129 @@ and **70 measures**, including:
 Single-period, comparison-period and to-date variants are all expressed from the same model, with
 export to Excel and CSV from every view.
 
+Performance dashboards for the whole chain
+==========================================
+
+Management reviews the chain through a standard performance deck: how every cluster, division,
+section and department is doing against target and last year. We rebuilt that deck as ten live
+dashboards, with the same filters, field order and chart types the business already knew.
+
+Cluster, division, section, department
+   Stores roll up into **clusters** (a zone master on the store company), and merchandise rolls
+   up from **division** (the product family) to **section** (class) and **department** (brick).
+   An expandable matrix has one tab per depth, so ratios such as margin % are always calculated
+   at the level shown and never summed.
+
+Targets and maturity
+   Daily targets per store, division and section are masters in the ERP and flow into the
+   warehouse. Store maturity (infant, growing, mature) is derived from the first sale, with an
+   override for stores that opened under another banner.
+
+Exports that open correctly in Excel
+   Every table carries a totals row. Exports produce one file named after the dashboard and the
+   time, with all rows rather than the page on screen, verbose column headers in grid order and
+   Indian number formats.
+
+The analytics workspace carries the customer's own brand: logo, colours, login page and menus.
+
+Business-owner view and KPI alerts
+==================================
+
+An owner does not want to open ten dashboards to learn that one store is in trouble. The
+**Business Owner** dashboard answers four questions on one screen: *How are we doing today? Which
+stores and clusters are behind? What is ageing? Where is cash tied up?*
+
+**KPI thresholds** are data, not code. Twelve KPIs, each with a warning and a critical level:
+
+* **Sales**: achievement against target (month to date), growth against last year, margin %, and
+  the share of sales made below cost.
+* **Stock**: shrinkage value, share of stock in old age batches, months of cover, bricks below half
+  their minimum base quantity, and fast sellers with less than seven days of cover.
+* **Logistics and data health**: transfer batches in transit for more than seven days, days since
+  a store's last synced sale, and stores with no sales for three days.
+
+Every KPI is evaluated for each store and for the business as a whole. A threshold can be set for
+the whole chain, for one cluster or for one store, and the most specific one wins. A materialised
+view refreshes every store's current status every ten minutes, and the dashboard reads it
+directly. Status is *critical*, *warning*, *OK*, *no data* or *off*.
+
+A **notifier service** turns a breach into an alert:
+
+* a **bell** on every page of the analytics workspace, a list of open alerts and an Alerts tab on
+  the owner dashboard;
+* **notification rules** that choose the scope (everything, business totals, one cluster or one
+  store), the minimum level and the recipients, delivered by **email, Slack, Microsoft Teams,
+  Google Chat or any JSON webhook**, which is also how an alert reaches the mobile app;
+* a message when a warning becomes critical, reminders while an alert stays open, a *back to
+  normal* message, and a **daily digest** with an optional AI summary;
+* a heartbeat on the notifier itself, so a silent notifier is noticed.
+
+Notifications ship switched off. Nothing is sent until someone adds recipients.
+
+AI insights and an ask box
+==========================
+
+**MetaLogic AI Insights** adds 27 ready-made analyses to the workspace, each a reviewed SQL query
+on the warehouse with guidance on how to read it, in five areas:
+
+* **Stock movement between stores**: did transferred stock sell after it arrived, ping-pong and
+  churn between stores, transit leakage, cluster imbalance, ageing stock that another store could
+  sell, dispatch discipline.
+* **Replenishment strategy**: ABC-XYZ segments, dynamic MBQ suggestions, size-curve gaps, the best
+  source for each shortfall, push against pull, last-piece consolidation, festival pre-build,
+  *return to HO or mark down*, and a replenishment KPI scorecard.
+* **Inventory and purchasing**: stock-out early warning, vendor scorecard, an open-to-buy guard
+  and a PO approval assistant.
+* **Accounting and finance**: journal anomalies, GST and HSN consistency, margin leakage and a
+  month-end MIS narrative.
+* **Store operations**: *why is this store behind?*, shrinkage and loss signals, an incentive coach
+  and promotion effectiveness.
+
+The database computes the figures; the language model only writes the commentary that explains
+them, always next to the evidence table it was given, so every sentence can be checked against a
+number on the page. An **ask box** takes a free-text question over the same data.
+
+The model provider is a setting. An administrator picks the provider and models, the key is
+stored encrypted, and every call is logged and cached. With no key configured the insights still
+show their data and simply omit the commentary.
+
+Analytics on the phone
+======================
+
+A **mobile app** for Android and iOS puts the same dashboards in the owner's pocket:
+
+* **Dashboards at phone width**: the real dashboards, so every chart, filter, cross-filter and
+  drill-down works, re-laid out one chart per row with the filter bar folded away.
+* **Seamless sign-in**: the app signs in once and keeps the password only in the phone's secure
+  keystore.
+* **Several workspaces**, favourites, manual and automatic refresh, a low-bandwidth mode, and
+  *share*, which sends a link that opens with the same filters applied.
+* **Alerts**: KPI alerts arrive in an Alerts tab and, once push is configured for the app, as
+  push notifications.
+
+Its distinguishing feature is the **filter-aware summary**. The app reads the filters the user has
+applied, reads each chart's data with that user's own permissions and asks for a short written
+summary of exactly what is on screen: *"Sales are 12% below target; two of the three clusters are
+behind, led by the south cluster."* A small **gateway** between the app and the analytics server
+handles the summaries, the device list and the alert webhook, so the phone never talks to the
+warehouse directly.
+
+A head-office dashboard inside Odoo
+===================================
+
+Not every question needs the warehouse. The **HO Dashboard** (`mtl_ho_dashboard`) is a client
+action inside Odoo for buyers and finance, with daily, weekly and monthly views:
+
+* **Sales** per company and period, from paid and invoiced POS orders;
+* **Stock closing** per company and day: Odoo does not keep stock history, so a nightly job
+  stores each day's in, out and closing quantity and a **Build history** button backfills any
+  range; today is always live;
+* **Journals** per company with an *unbalanced entries* column that has found real posting
+  defects on migrated data.
+
+Drill-down opens the underlying documents. Reads are raw SQL, so the page answers in about two
+seconds across fifty companies.
+
 From overnight batch to live
 ============================
 
